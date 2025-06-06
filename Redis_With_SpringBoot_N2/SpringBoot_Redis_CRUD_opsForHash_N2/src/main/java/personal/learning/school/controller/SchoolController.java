@@ -1,0 +1,69 @@
+package personal.learning.school.controller;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import personal.learning.genric.exception.ErrorPayload;
+import personal.learning.school.entity.Student;
+import personal.learning.school.service.StudentService;
+
+@RestController
+@RequestMapping("/school/student")
+public class SchoolController {
+	
+	@Autowired
+	private StudentService studentService;
+	
+	@PostMapping
+	public ResponseEntity<?> saveStudent(@RequestBody Student student) {
+		
+		String id = studentService.save(student);
+		return ResponseEntity.ok(id);
+	}
+	
+	@GetMapping("/{id}")
+	public ResponseEntity<?> getStudentById(@PathVariable("id") String id) {
+		
+		Student student = studentService.getStudentById(id);
+		return ResponseEntity.ok(student);
+	}
+	
+	@DeleteMapping("/{id}")
+	public ResponseEntity<?> deleteById(@PathVariable("id") String id) {
+		
+		try {
+			studentService.deleteById(id);
+		} catch (Exception e) {
+			ErrorPayload errorpayload = new ErrorPayload();
+			errorpayload.setHttpStatus(HttpStatus.NOT_FOUND);
+			errorpayload.setMessage(e.getMessage());
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorpayload);
+		}
+		return ResponseEntity.ok("Student with id:" + id + " is deleted");
+	}
+	
+	@PutMapping("/{id}")
+	public ResponseEntity<?> updateById(@PathVariable("id") String id, @RequestBody Student student) {
+		
+		try {
+			studentService.updateById(id, student);
+		} catch (Exception e) {
+			ErrorPayload errorpayload = new ErrorPayload();
+			errorpayload.setHttpStatus(HttpStatus.NOT_FOUND);
+			errorpayload.setMessage(e.getMessage());
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorpayload);
+		}
+		return ResponseEntity.ok("Student with id:" + id + " is updated");
+	}
+	
+	
+}

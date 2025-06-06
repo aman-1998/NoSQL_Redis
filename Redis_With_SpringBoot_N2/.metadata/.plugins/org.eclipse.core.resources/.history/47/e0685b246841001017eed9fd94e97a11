@@ -1,0 +1,6 @@
+package personal.learning;
+
+@Confi
+public class RedisConfig {
+
+}

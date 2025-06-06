@@ -1,0 +1,119 @@
+==========================
+Redis commands (string) :
+==========================
+
+# To get info:
+---------------
+help @string
+
+Note: We don't have to remember commands we can find using: help @<keyword>
+Example: help @string, help @set, etc
+
+
+# SET key value :
+------------------
+
+SET name "Aman Kumar Mishra"
+
+
+# SET key value [EX seconds | PX milliseconds | EXAT unix-time-seconds | PXAT unix-time-milliseconds | KEEPTTL] [NX | XX] [GET]
+---------------------------------------------------------------------------------------------------------------------------------
+
+SET session:aman@1998 "active" EX 3600
+
+After 1 hour the key-value pair will be deleted
+
+
+# GET key :
+------------
+
+GET name
+
+
+# GETEX key GETEX key [EX seconds | PX milliseconds | EXAT unix-time-seconds | PXAT unix-time-milliseconds | PERSIST]
+----------------------------------------------------------------------------------------------------------------------
+
+GET session:aman@1998 EX 600
+
+This overrides the previous expiry time. Now expiry time of the key-value pair is 10 mins
+
+
+# APPEND key value :
+---------------------
+
+APPEND name ", I am a coding enthusiast"
+
+result: "Aman Kumar Mishra, I am a coding enthusiast"
+
+
+# INCR key :
+-------------
+
+It increments the integer value by 1
+
+SET age 12
+
+INCR age
+INCR age
+INCR age
+INCR age
+
+GET age
+
+result: 16
+
+
+# DECR key :
+-------------
+
+It decrements the value pointed by the mentioned key.
+
+DECR agge
+
+
+#INCRBY key decrement :
+------------------------
+
+INCRBY age 4
+
+
+#DECRBY key decrement :
+------------------------
+
+DECRBY age 5
+
+
+# GETDEL key :
+---------------
+
+Get the value using key and then delete the key-value pair
+
+
+# GETRANGE key start end :
+---------------------------
+
+SET myKey "This is my territory"
+
+GETRANGE myKey 0 3
+
+result: This
+
+
+# STRLEN key :
+--------------
+
+It gives length of the string value
+
+
+# GETSET key value :
+---------------------
+
+It returns previous string value of a key after setting it to a new value.
+
+
+SET name "Aman"
+
+GETSET name "Misra"
+
+result: Aman
+

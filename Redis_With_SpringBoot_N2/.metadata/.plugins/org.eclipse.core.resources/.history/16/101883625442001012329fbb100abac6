@@ -1,0 +1,38 @@
+package personal.learning.school.service;
+
+import org.bson.types.ObjectId;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestParam;
+
+import personal.learning.school.entity.Student;
+import personal.learning.school.repository.StudentRepositoryMongo;
+import personal.learning.school.repository.StudentRepositoryRedis;
+
+@Service
+public class StudentServiceImpl implements StudentService {
+	
+	@Autowired
+	private StudentRepositoryRedis studentRepositoryRedis;
+	
+	@Autowired
+	private StudentRepositoryMongo studentRepositoryMongo;
+
+	@Override
+	public Student getStudentDetails(String id) {
+		
+		boolean isPresentInCache = studentRepositoryRedis.isAvailale(id);
+		
+		if(isPresentInCache) {
+			return studentRepositoryRedis.getStudentById(id);
+		} else {
+			ObjectId obId = new ObjectId(id);
+			return studentRepositoryMongo.getStudentById(obId);
+		}
+	}
+	
+	
+}

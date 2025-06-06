@@ -1,0 +1,28 @@
+package personal.learning.school.repository;
+
+import java.util.concurrent.TimeUnit;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.stereotype.Repository;
+
+import personal.learning.school.entity.Student;
+
+@Repository
+public class StudentRepository {
+	
+	private static final String KEY_PREFIX = "STUDENT:";
+	
+	@Autowired
+	private RedisTemplate<String, Object> redisTemplate;
+
+	public void save(Student student) {
+		redisTemplate.opsForValue().set(KEY_PREFIX + student.getId(), student);
+		
+		// expire after 5 mins
+		//redisTemplate.opsForValue().set(KEY_PREFIX + student.getId(), student, 5, TimeUnit.MINUTES);
+	}
+	
+	
+
+}

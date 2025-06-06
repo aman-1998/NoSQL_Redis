@@ -1,0 +1,74 @@
+=======================
+# Redis installation :
+=======================
+
+Step 1: Open Ubuntu terminal
+
+Step 2: curl -fsSL https://packages.redis.io/gpg | sudo gpg --dearmor -o /usr/share/keyrings/redis-archive-keyring.gpg
+
+Step 3: echo "deb [signed-by=/usr/share/keyrings/redis-archive-keyring.gpg] https://packages.redis.io/deb $(lsb_release -cs) main" | sudo tee /etc/apt/sources.list.d/redis.list
+
+Step 4: sudo apt-get update
+
+Step 5: sudo apt-get install redis
+
+
+=======================
+# Start Redis server :
+=======================
+
+Open new Ubuntu terminal and execute below command :->
+
+sudo service redis-server start
+
+This command starts the redis server in background
+
+
+===============================================
+# Connect to redis-server using redis client :
+===============================================
+
+Open new Ubuntu terminal and execute below command :->
+
+redis-cli
+
+Now we can execute redis commands in this terminal.
+
+execute the command 'ping' it will give output 'PONG'
+127.0.0.1:6379> ping
+PONG
+
+
+=============================
+# To Stop Redis gracefully:
+=============================
+
+Open new Ubuntu terminal and execute below command :->
+
+sudo service redis-server stop
+
+
+=========================================================
+# To check if Redis is running as a background service :
+=========================================================
+
+Open new Ubuntu terminal and execute below command :->
+
+ps aux | grep redis
+
+
+========================
+# Check Redis Status :
+========================
+
+Open new Ubuntu terminal and execute below command :->
+
+sudo systemctl status redis-server
+
+
+
+
+
+
+
+

@@ -1,0 +1,13 @@
+package personal.learning.school.service;
+
+import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RequestParam;
+
+@Service
+public class StudentServiceImpl implements StudentService {
+	
+	public ResponseEntity<?> getStudentDetails(@RequestParam("roll") Integer roll) {
+		
+	}
+}

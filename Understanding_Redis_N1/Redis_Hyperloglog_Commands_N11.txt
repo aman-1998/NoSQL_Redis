@@ -1,0 +1,11 @@
+============================
+# Redis commands (hyperloglog) :
+============================
+A probablistic datastructure used for counting unique elements wiht low memory usage.
+
+# To get info:
+---------------
+help @hyperloglog
+
+Note: We don't have to remember commands we can find using: help @<keyword>
+

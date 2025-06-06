@@ -1,0 +1,46 @@
+package personal.learning.school.service;
+
+import java.util.UUID;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import personal.learning.school.entity.Student;
+import personal.learning.school.repository.StudentRepository;
+
+@Service
+public class StudentServiceImpl implements StudentService {
+	
+	@Autowired
+	private StudentRepository studentRepository;
+
+	@Override
+	public String save(Student student) {
+		
+		student.setId(UUID.randomUUID().toString());
+		studentRepository.save(student);
+		return student.getId();
+	}
+
+	@Override
+	public Student getStudentById(String id) {
+		 
+		Student student = studentRepository.getStudentById(id);
+		return student;
+	}
+
+	@Override
+	public void deleteById(String id) {
+		
+		studentRepository.deleteById(id);
+	}
+
+	@Override
+	public void updateById(String id, Student student) {
+		
+		studentRepository.updateById(id, student);
+	}
+
+	
+
+}

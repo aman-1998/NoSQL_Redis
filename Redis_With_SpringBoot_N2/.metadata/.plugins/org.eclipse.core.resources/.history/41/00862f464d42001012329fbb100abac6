@@ -1,0 +1,22 @@
+package personal.learning.school.repository;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.stereotype.Repository;
+
+@Repository
+public class StudentRepository  {
+	
+	private static final HASH_KEY = "STUDENT";
+	
+	@Autowired
+	private RedisTemplate<String, Object> redisTemplate;
+
+	public boolean isAvailale(String id) {
+		
+		redisTemplate.opsForHash().has
+		return false;
+	}
+	
+	
+}

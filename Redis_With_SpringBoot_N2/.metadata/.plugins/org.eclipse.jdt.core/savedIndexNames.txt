@@ -1,0 +1,5 @@
+INDEX VERSION 1.131+C:\Users\DELL\Desktop\Redis_Concepts\Redis_With_SpringBoot_N2\.metadata\.plugins\org.eclipse.jdt.core
+2001069298.index
+33084202.index
+1516239278.index
+1865797976.index

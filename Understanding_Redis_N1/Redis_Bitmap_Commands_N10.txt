@@ -1,0 +1,11 @@
+============================
+# Redis commands (bitmap) :
+============================
+Strings representing binary data. You can manipulate individual bits in a string value
+
+# To get info:
+---------------
+help @bitmap
+
+Note: We don't have to remember commands we can find using: help @<keyword>
+

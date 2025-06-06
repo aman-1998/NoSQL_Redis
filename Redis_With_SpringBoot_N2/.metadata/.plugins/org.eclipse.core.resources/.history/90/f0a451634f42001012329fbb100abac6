@@ -1,0 +1,5 @@
+package personal.learning.school.repository;
+
+public class StudentRepositoryMongo {
+
+}

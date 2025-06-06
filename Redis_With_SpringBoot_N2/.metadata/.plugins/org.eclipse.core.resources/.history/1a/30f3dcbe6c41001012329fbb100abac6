@@ -1,0 +1,8 @@
+spring.application.name=SpringBoot_With_MongoDB
+server.port=9191
+
+# MongoDB URI
+my.mongodb.uri=mongodb://localhost:27017
+
+# Redis URI
+my.redis.uri=

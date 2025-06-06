@@ -1,0 +1,13 @@
+================================
+# Redis commands (sorted-set) :
+================================
+Sorted-set is similar to set but with score associated with each member, which 
+orders the set. Here also data is not repeated. It is useful for leaderboard-like 
+functionality.
+
+# To get info:
+---------------
+help @sorted-set
+
+Note: We don't have to remember commands we can find using: help @<keyword>
+

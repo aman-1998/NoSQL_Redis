@@ -1,0 +1,14 @@
+package personal.learning.school.repository;
+
+import org.springframework.stereotype.Repository;
+
+import personal.learning.school.entity.Student;
+
+@Repository
+public class StudentRepository {
+
+	void save(Student student);
+	
+	
+
+}

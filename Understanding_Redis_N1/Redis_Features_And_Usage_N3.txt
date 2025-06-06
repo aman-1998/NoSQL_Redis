@@ -1,0 +1,174 @@
+===========
+# Redis :
+===========
+
+Redis is a in-memeory datastructure that can be used as a database, cache and message broker.
+Redis supports various data structures such as strings, hashes, lists, sets, sortedsets, bitmaps, 
+hyperloglogs and geospatial indexes.
+
+
+# Features of Redis:
+=====================
+
+1. In-Memory Storage:
+---------------------
+-> Fast read and write operations
+-> Ideal for real-time requirements
+
+2. Persistance:
+----------------
+-> Provide option to dump data to disk
+
+3. Wide variety of Datastructures supported:
+---------------------------------------------
+-> Redis supports various data structures such as strings, hashes, lists, sets, soortedsets, bitmaps, 
+hyperloglogs and geospatial indexes.
+
+4. Replication:
+----------------
+-> Redis supports master-slave replication allowing data to be replicated to multiple servers for redundancy
+and failover
+
+5. Pub/Sub Messaging:
+----------------------
+-> Redis can act as a message-broker using its publish/subscribe capabilitie allowing for real-time
+messaging application.
+
+
+Note: Most popularly redis is used for its in-memory data-storage and is used for caching purpose and 
+real-time read/write operations. Example: Location tracking system, Weather application (cache)
+
+=================================================================================================
+# If redis is used for in-memory data storage for caching. Why can't we use a hashmap in java to 
+store data and use it as cache ?
+=================================================================================================
+Java HashMap for Caching:
+--------------------------
+Advantages:
+-> Easy to implement with no external dependencies.
+-> Provides fast, in-process access to data.
+
+Limitations:
+-> Data is confined to the application's memory space; not accessible across different processes or servers.
+-> Requires manual implementation of time-to-live (TTL) or eviction policies.
+-> Large caches can lead to increased garbage collection overhead, potentially affecting application performance.
+-> Data is lost when the application stops or crashes.
+
+
+Redis for Caching:
+-------------------
+Advantages:
+-> Acts as an external service accessible by multiple applications or services, facilitating shared caching.
+-> Supports TTL and various eviction policies out-of-the-box.
+-> Offers structures like lists, sets, sorted sets, and hashes, enabling complex caching strategies.
+-> Can persist data to disk, allowing recovery after restarts.
+-> Supports clustering and replication for horizontal scaling and high availability.
+
+Considerations:
+-> Operational Overhead: Requires running and managing a separate Redis server or service.
+-> Serialization: Data must be serialized/deserialized when communicating between the application and Redis.
+
+===============================
+# Redis persistance behavior :
+===============================
+After starting redis-server, you saved a key-value pair. Now you stopped the redis-server
+and then again restarts the server. Now, you will still be able to see the key-value pair.
+The key-value pair that you saved earlier is persisting because by-default redis persists
+the data. 
+
+Redis supports two main persistence mechanisms:
+1. RDB (Snapshotting) – Default behavior
+2. AOF (Append Only File) – Optional
+
+
+Windows drives are mounted under /mnt/. For example, your C: drive is at /mnt/c/
+sudo cp /etc/redis/redis.conf /mnt/c/Users/DELL/Desktop/Redis_Concepts
+
+
+----------------------
+# RDB (Snapshotting):
+----------------------
+Redis creates point-in-time snapshots of your dataset at specified intervals.
+This is configured by default in the Redis config file (redis.conf) using lines like:
+save 900 1
+save 300 10
+save 60 10000
+
+This means:
+-> Save in the DB every 900 seconds (15 mins) if at least 1 key changed.
+-> Save in the every 300 seconds if 10 keys changed.
+-> Save in the every 60 seconds if 10000 keys changed.
+
+The snapshot of current dataset is saved in a file named dump.rdb (typically in /var/lib/redis).
+
+So even though Redis is in-memory, It periodically dumps data to disk. On restart, 
+it reloads that data into RAM from the dump.rdb file.
+
+If nothing is specified in redis.conf, then in-built default behavior 
+is applied (save 3600 1 300 100 60 10000)
+The default behavior is:
+save 3600 1
+save 300 100
+save 60 10000
+
+Conclusion: Persistence is ON by default using RDB snapshotting.
+
+----------------------------
+# AOF (Append Only File) :
+----------------------------
+Another persistence mode is AOF, where every write operation is logged.
+You may enable it in redis.conf with:
+
+appendonly yes
+
+Then Redis saves to a file called appendonly.aof (typically in /var/lib/redis), 
+allowing more durable persistence than RDB.
+
+--------------------------------------------------
+# Redis Startup Behavior (when both are present)
+--------------------------------------------------
+If you want persistance behavior and your redis.conf content is like this:
+save 900 1              # RDB: Save if 1 change in 900 seconds
+save 300 10             # RDB: Save if 10 changes in 300 seconds
+appendonly yes          # Enable AOF
+appendfsync everysec    # AOF fsync once per second
+
+Then, when Redis restarts:
+
+By default, AOF takes priority over RDB.
+
+Redis loads data from appendonly.aof and ignores dump.rdb because AOF is usually 
+more up-to-date than RDB.
+
+
+Note: 
+-----
+Meaning of appendfsync everysec:
+Redis will accumulate write commands inside in-memory AOF buffer and then flush them to 
+disk once every second.
+
+Other options available are:
+--------------------------------------------------------------------------------------------------------------------
+| Setting                | Durability                           | Performance    | Risk of Data Loss                |
+| ---------------------- | -------------------------------------| -------------- | -------------------------------- |
+| `appendfsync always`   | Highest (sync after **every** write) | Slowest        |  ~0% (very safe)                 |
+| `appendfsync everysec` | Good (sync every **1 second**)       | Good balance   |  ~1 second of data loss if crash |
+| `appendfsync no`       | Lower (OS decides when to flush)     | Fastest        |  Risk of more data loss          |
+--------------------------------------------------------------------------------------------------------------------
+
+
+-------------------------------------------------------------
+# Want Redis to be purely in-memory (no persistence at all)?
+-------------------------------------------------------------
+You can disable persistence by editing redis.conf:
+
+save ""
+appendonly no
+
+Then restart Redis using that config. Now data won’t survive restarts.
+
+You can check the current persistance settings by connecting to redis-cli and
+executing below command:
+CONFIG GET save
+CONFIG GET appendonly
+

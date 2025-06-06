@@ -1,0 +1,123 @@
+=============================
+# Install WSL2 in Windows :
+=============================
+
+Redis works only on Linux operating system so we can't directly install Redis on windows.
+So, we have to install WSL2 (Windows Subsystem For Linux - ver 2) and then we can install
+Ubuntu inside WSL2. After that we can install Redis in Ubuntu.
+
+
+--------------------------------------------
+Step 1: Check if your system supports WSL2
+--------------------------------------------
+Press: windows + R 
+type: winver
+Then press ENTER
+
+Note down your windows version and build. Now, check whether your system supports
+WSL2 or not. You can take help of ChatGpt.
+
+For example:
+Windows 10 pro operating System
+Version 22H2 (os Build 19045.5371)
+
+This OS supports WSL2
+
+---------------------
+Step 2: Install WSL2
+---------------------
+wsl --install
+
+-----------------------------------------------------------------------------|
+Note: If wsl is already installed in your system and its version is 1 then   |
+update to version 2                                                          |
+wsl --update                                                                 |                                                   |
+-----------------------------------------------------------------------------|
+
+The above command should work fine. But if your laptop is old then this command 
+my not work. It will show invalid command.
+
+wsl --status
+
+This command will show version 2. That mean WSL2 is installed in your system.
+
+wsl --version
+
+This command should also give version of WSL installed but if this command is also
+not working that means your system is currently running the legacy built-in WSL 2 
+version that doesn’t recognize --version, --install, --update, etc.
+
+So, you have to install Windows Subsystem for Linux from Microsoft Store
+Link: https://apps.microsoft.com/detail/9P9TQF7MRM4R?hl=en-us&gl=AF&ocid=pdpshare
+or,
+Link: https://apps.microsoft.com/detail/9p9tqf7mrm4r?hl=en-US&gl=IN
+
+After installation is complete then you are good to go.
+
+
+----------------------------------------------
+Step 3: List All Available Distros to Install
+----------------------------------------------
+wsl --list --online
+
+The following is a list of valid distributions that can be installed.
+Install using 'wsl.exe --install -d <DistroName>'.
+
+NAME            FRIENDLY NAME
+Ubuntu          Ubuntu
+Debian          Debian GNU/Linux
+kali-linux      Kali Linux Rolling
+openSUSE-42     openSUSE Leap 42
+...
+
+------------------------
+Step 4: Install Ubuntu
+------------------------
+wsl --install -d Ubuntu
+
+
+---------------------------------
+Step 5: Set username / password
+---------------------------------
+
+Afer installation a terminal will open to set your username / password
+Example: Type your username: aman
+         Type password: aman
+		 Retype password: aman
+
+
+------------------------------------
+Step 6: Verify Ubuntu installation:
+------------------------------------
+wsl --list --verbose
+or,
+wsl --l --v
+
+
+C:\Users\DELL>wsl --list --verbose
+  NAME      STATE           VERSION
+* Ubuntu    Running         2
+		 
+
+-----------------------------------------------------------		 
+Step 7: Search Ubuntu in seachbar and open Ubuntu terminal
+------------------------------------------------------------
+Now you are ready to use Ubuntu using terminal
+
+
+------------------------------------------------------------------
+Step 8: In Ubuntu terminal verify if 'systemd' is enabled or not
+------------------------------------------------------------------
+ps -p 1 -o comm=
+
+This should return 'systemd' as output
+
+
+==================================================================
+Note: Now you can install Docker Desktop, Redis, etc inside WSL2.
+==================================================================
+
+
+
+
+

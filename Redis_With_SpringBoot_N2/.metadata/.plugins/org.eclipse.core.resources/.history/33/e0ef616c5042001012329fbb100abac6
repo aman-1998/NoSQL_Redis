@@ -1,0 +1,20 @@
+package personal.learning.school.repository;
+
+import org.bson.types.ObjectId;
+import org.springframework.data.mongodb.core.query.Criteria;
+import org.springframework.data.mongodb.core.query.Query;
+import org.springframework.stereotype.Repository;
+
+import personal.learning.school.entity.Student;
+
+@Repository
+public class StudentRepositoryMongo {
+
+	public Student getStudentById(ObjectId obId) {
+		
+		Query query = new Query();
+		query.addCriteria(Criteria.where("_id").is(obId));
+		return null;
+	}
+
+}

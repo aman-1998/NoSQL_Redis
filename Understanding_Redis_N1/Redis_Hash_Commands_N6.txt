@@ -1,0 +1,138 @@
+==========================
+Redis commands (hash) :
+==========================
+
+
+# To get info:
+---------------
+help @hash
+
+Note: We don't have to remember commands we can find using: help @<keyword>
+Example: help @string, help @set, etc
+
+
+# HSET key field value :
+--------------------------
+ 
+HSET key field1 value1 field2 value2 field3 value3 ...
+
+HSET student name "Aman" roll 123 age 23 school "KHEMS"
+
+This command sets the specified fields to their respective values in the hash stored at student. 
+If the student key does not exist, Redis will create it and store the hash. If any of the fields 
+already exist, their values will be updated.
+
+
+Fields and Values:
+
+name: "Aman"
+roll: "123"
+age: "23"
+school: "KHEMS"
+
+
+Redis stores all hash field values as strings. Even if you input numeric values like 123 or 23, 
+they are stored as strings. In Redis, all data—including numbers—is stored as strings. 
+When you execute a command like HSET student roll 123, the value 123 is stored as the string "123", 
+not as an integer. This behavior is consistent across Redis data types, including hashes, lists, and sets.
+
+Note: HSET is ideal to store an object.
+
+
+# HGET key field :
+-------------------
+
+HGET student name
+result: "Aman"
+
+HGET student age
+result: "23"
+
+HGET student school
+result: "KHEMS"
+
+
+# HGETALL key :
+-----------------
+
+HSET student name "Aman" roll 138 age 28 school "KHEMS"
+
+HGETALL student
+result:
+1) "name"
+2) "Aman"
+3) "roll"
+4) "138"
+5) "age"
+6) "28"
+7) "school"
+8) "KHEMS"
+
+
+# HDEL key field1 :
+--------------------
+
+HDEL key field1 field2 filed3 ...
+
+HDEL student age school
+
+HGETALL student
+result:
+1) "name"
+2) "Aman"
+3) "roll"
+4) "138"
+
+
+# HEXISTS key field :
+----------------------
+
+HEXISTS student name
+result: 1
+
+HEXISTS student phone
+result: 0
+
+
+# HINCRBY key field increment :
+---------------------------------
+
+HINCRBY student roll 2
+
+HGETALL student
+result:
+1) "name"
+2) "Aman"
+3) "roll"
+4) "140"
+
+
+# HKEYS key :
+--------------
+
+HKEYS student
+result:
+1) "name"
+2) "roll"
+
+
+# HLEN key :
+--------------
+
+Return number of fields in the key
+
+HLEN student
+result: 2
+
+
+# HMGET key field1 : 
+---------------------
+
+HMGET key field1 field2 field3 ...
+
+HMGET student name roll
+result:
+1) "Aman"
+2) "140"
+
+

@@ -1,0 +1,38 @@
+package personal.learning.school.controller;
+
+import java.util.UUID;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import personal.learning.school.entity.Student;
+import personal.learning.school.service.StudentService;
+
+@RestController
+@RequestMapping("/school")
+public class SchoolController {
+	
+	@Autowired
+	private StudentService studentService;
+	
+	@PutMapping("/student")
+	public ResponseEntity<?> saveStudent(@RequestBody Student student) {
+		
+		student.setId(UUID.randomUUID().toString());
+		String roll = studentService.save(student);
+		return ResponseEntity.ok(roll);
+	}
+	
+	@GetMapping("/student")
+	public ResponseEntity<?> getStudent(Integer roll) {
+		
+		String roll = studentService.save(student);
+		return ResponseEntity.ok(roll);
+	}
+	
+}

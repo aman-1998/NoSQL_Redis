@@ -1,0 +1,6 @@
+package personal.learning.school.service;
+
+public interface StudentService {
+
+
+}

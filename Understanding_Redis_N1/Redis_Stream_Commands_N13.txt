@@ -1,0 +1,11 @@
+=============================
+# Redis commands (stream) :
+=============================
+stream is used for managing data logs and real-time message processing.
+
+# To get info:
+---------------
+help @stream
+
+Note: We don't have to remember commands we can find using: help @<keyword>
+

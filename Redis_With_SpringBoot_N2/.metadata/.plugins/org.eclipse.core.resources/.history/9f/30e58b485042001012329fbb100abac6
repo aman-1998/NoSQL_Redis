@@ -1,0 +1,15 @@
+package personal.learning.school.repository;
+
+import org.springframework.stereotype.Repository;
+
+import personal.learning.school.entity.Student;
+
+@Repository
+public class StudentRepositoryMongo {
+
+	public Student getStudentById(String id) {
+		
+		return null;
+	}
+
+}

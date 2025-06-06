@@ -1,0 +1,11 @@
+================================
+# Redis commands (geo) :
+================================
+Store geospatial items and perform queries by radius or bounding box.
+
+# To get info:
+---------------
+help @geo
+
+Note: We don't have to remember commands we can find using: help @<keyword>
+

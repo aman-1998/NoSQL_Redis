@@ -1,0 +1,36 @@
+=====================
+# Commands in Redis:
+=====================
+
+# To get info:
+---------------
+help @<keyword>
+
+Note: We don't have to remember commands. We can find using: help @<keyword>
+Example: help @string, help @set, etc
+
+
+# To display all users:
+------------------------
+ACL USERS
+
+
+# To display current users:
+----------------------------
+ACL WHOAMI
+
+
+# To chek server time:
+-----------------------
+TIME
+
+
+# To get client info:
+-----------------------
+client info
+
+
+# Show all client list:
+------------------------
+client list
+

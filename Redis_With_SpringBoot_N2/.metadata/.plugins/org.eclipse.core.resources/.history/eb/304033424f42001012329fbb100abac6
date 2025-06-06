@@ -1,0 +1,32 @@
+package personal.learning.school.service;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestParam;
+
+import personal.learning.school.entity.Student;
+import personal.learning.school.repository.StudentRepository;
+
+@Service
+public class StudentServiceImpl implements StudentService {
+	
+	@Autowired
+	private StudentRepository studentRepository;
+
+	@Override
+	public Student getStudentDetails(String id) {
+		
+		boolean isPresentInCache = studentRepository.isAvailale(id);
+		
+		if(isPresentInCache) {
+			return studentRepository.getStudentById(id);
+		} else {
+			return null;
+		}
+	}
+	
+	
+}

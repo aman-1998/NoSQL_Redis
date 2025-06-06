@@ -1,0 +1,33 @@
+package personal.learning.school.repository;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import org.bson.types.ObjectId;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.core.query.Criteria;
+import org.springframework.data.mongodb.core.query.Query;
+import org.springframework.stereotype.Repository;
+
+import personal.learning.school.entity.Student;
+
+@Repository
+public class StudentRepositoryMongo {
+	
+	@Autowired
+	@Qualifier("mongoTemplateSchool")
+	private MongoTemplate mongoTemplateSchool;
+
+	public Student getStudentById(String id) {
+		
+		Query query = new Query();
+		query.addCriteria(Criteria.where("_id").is(id));
+		
+		System.out.println("Mongo query : " + query);
+		
+		return mongoTemplateSchool.findOne(query, Student.class);
+	}
+	
+}

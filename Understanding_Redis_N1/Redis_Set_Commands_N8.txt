@@ -1,0 +1,69 @@
+==========================
+# Redis commands (set) :
+==========================
+Set is anunorderd collection of data where data is not repeated
+
+# To get info:
+---------------
+help @set
+
+Note: We don't have to remember commands we can find using: help @<keyword>
+Example: help @string, help @set, etc
+
+
+# SADD key element1 element2 element3 ...
+-------------------------------------------
+
+SADD marks 12 23 78 45 78 12 56 87 98 12
+
+7 elements added:  12 23 78 45 56 87 98
+
+
+# SCARD key :
+--------------
+
+Returns number of elements in the set
+
+SCARD marks
+result: 7
+
+
+#SDIFF key1 key2 : (set1 - set2)
+----------------------------------
+
+SADD test 78 45 98 34 14
+
+SDIFF marks test
+result:
+1) "12"
+2) "23"
+3) "56"
+4) "87"
+
+
+# SINTER key1 key2 : (Intersection)
+-------------------------------------
+
+SINTER marks test
+result:
+1) "45"
+2) "78"
+3) "98"
+
+Performs intersection of two sets
+
+
+# SPOP key 
+#SPOP key count
+------------------
+
+SPOP marks
+
+SPOP marks 3
+
+# SUNION key1, key2 :
+-----------------------
+
+SUNION marks test
+
+Performs union of two sets

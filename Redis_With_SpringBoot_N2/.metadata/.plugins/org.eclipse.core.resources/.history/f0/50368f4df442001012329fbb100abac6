@@ -1,0 +1,43 @@
+package personal.learning.school.controller;
+
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+
+import personal.learning.genric.exception.ErrorPayload;
+import personal.learning.school.entity.Student;
+import personal.learning.school.service.StudentService;
+
+@RestController
+@RequestMapping("/school")
+public class SchoolController {
+	
+	@Autowired
+	private StudentService studentService;
+	
+	@GetMapping("/student/{id}")
+	public ResponseEntity<?> getStudentDetails(@PathVariable("id") String id) {
+			
+			Student student = studentService.getStudentDetails(id);
+			if(student == null) {
+				ErrorPayload errorPayload = new ErrorPayload();
+				errorPayload.setHttpStatus(HttpStatus.NOT_FOUND);
+				errorPayload.setMessage("Student with id:" + id + " doesn't exist");
+				return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorPayload);
+			}
+			return ResponseEntity.ok(student);
+	}
+	
+	@GetMapping("/student/age")
+	public ResponseEntity<?> getStudentByAgeGreaterThan(@RequestParam(value = "age") Integer age) {
+		return studentService.getStudentByAgeGreaterThan(age);
+	}
+	
+}

@@ -1,0 +1,180 @@
+==========================
+# Redis commands (list) :
+==========================
+List is an order collection of data where data can be repeated.
+
+# To get info:
+---------------
+help @list
+
+Note: We don't have to remember commands we can find using: help @<keyword>
+Example: help @string, help @set, etc
+
+
+# LPUSH key element1 element2 element3 ...
+--------------------------------------------
+
+LPUSH employee Ram Shyam Krishna Seeta Radha Rukmini
+
+The elements are added in the order they appear, but each is pushed to the front, 
+so the final order in the list is reversed from the input.
+
+The list will look like this (from head to tail):
+
+Rukmini, Radha, Seeta, Krishna, Shyam, Ram
+
+
+# LRANGE key start stop :
+--------------------------
+
+LPUSH employee Ram Shyam Krishna Seeta Radha Rukmini
+
+LRANGE employee 0 5
+result:
+1) "Rukmini"
+2) "Radha"
+3) "Seeta"
+4) "Krishna"
+5) "Shyam"
+6) "Ram"
+
+
+LRANGE employee 0 -1
+result:
+1) "Rukmini"
+2) "Radha"
+3) "Seeta"
+4) "Krishna"
+5) "Shyam"
+6) "Ram"
+
+
+LRANGE employee 0 3
+result:
+1) "Rukmini"
+2) "Radha"
+3) "Seeta"
+4) "Krishna"
+
+
+# RPUSH key element1 element2 element3 ...
+--------------------------------------------
+
+RPUSH employee Ram Shyam Krishna Seeta Radha Rukmini
+
+The elements are added in the order they appear, but each is pushed from the right, 
+so the final order in the list is reversed from the input.
+
+The list will look like this (from head to tail):
+
+Ram Shyam Krishna Seeta Radha Rukmini
+
+
+# LPOP key :
+-------------
+
+LPOP employee
+
+
+# RPOP key :
+-------------
+
+RPOP employee
+
+
+# LSET key index element :
+---------------------------
+
+LSET employee 2 Balram
+
+Its set the value at index 2 as Balram where index starts from left side.
+
+
+# LTRIM key start stop :
+--------------------------
+
+LPUSH employee Ram Shyam Krishna Seeta Radha Rukmini
+
+LRANGE employee 0 -1
+result:
+1) "Rukmini"
+2) "Radha"
+3) "Seeta"
+4) "Krishna"
+5) "Shyam"
+6) "Ram"
+
+LTRIM employee 0 2
+result:
+1) "Rukmini"
+2) "Radha"
+3) "Seeta"
+
+Everything beyond index 2 is removed (Krishna, Shyam, Ram).
+
+
+# LINSERT key BEFORE|AFTER pivot element :
+-------------------------------------------
+
+LPUSH employee Ram Shyam Krishna Seeta Radha Rukmini
+
+LRANGE employee 0 -1
+result:
+1) "Rukmini"
+2) "Radha"
+3) "Seeta"
+4) "Krishna"
+5) "Shyam"
+6) "Ram"
+
+
+LINSERT employee BEFORE Radha Janki
+
+LRANGE employee 0 -1
+result:
+1) "Rukmini"
+2) "Janki"
+3) "Radha"
+4) "Seeta"
+5) "Krishna"
+6) "Shyam"
+7) "Ram"
+
+
+LINSERT employee AFTER Seeta Draupadi
+
+LRANGE employee 0 -1
+result:
+1) "Rukmini"
+2) "Janki"
+3) "Radha"
+4) "Seeta"
+5) "Daraupadi"
+6) "Krishna"
+7) "Shyam"
+8) "Ram"
+
+
+# LLEN key :
+-------------
+
+Return lenght of the list
+
+
+#LINDEX key index :
+--------------------
+
+LINDEX employee 2
+result: Radha
+
+Get element by index
+
+
+
+
+
+
+
+
+
+

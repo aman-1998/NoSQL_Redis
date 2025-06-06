@@ -1,0 +1,47 @@
+package personal.learning.school.repository;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import org.bson.types.ObjectId;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.core.query.Criteria;
+import org.springframework.data.mongodb.core.query.Query;
+import org.springframework.stereotype.Repository;
+
+import personal.learning.school.entity.Student;
+
+@Repository
+public class StudentRepositoryMongo {
+	
+	@Autowired
+	private MongoTemplate mongoTemplateSchool;
+
+	public Student getStudentById(ObjectId obId) {
+		
+		Query query = new Query();
+		query.addCriteria(Criteria.where("_id").is(obId));
+		
+		return mongoTemplateSchool.findOne(query, Student.class);
+	}
+	
+	public List<Student> getStudentByAgeGreaterThan(Integer age) throws Exception {
+		
+		if(age < 0 && age > 125) {
+			throw new Exception("Invalid age");
+		} 
+		
+		Query query = new Query();
+		
+		List<Criteria> criteriaList = new ArrayList<>();
+		criteriaList.add(Criteria.where("age").gt(age));
+		
+		query.addCriteria(criteriaList.get(0));
+		System.out.println("Mongo Query: " + query);
+		List<Student> listOfStudent = mongoTemplateSchool.find(query, Student.class);
+		
+		return listOfStudent;
+	}
+
+}

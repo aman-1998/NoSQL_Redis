@@ -1,0 +1,28 @@
+package personal.learning.school.service;
+
+import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestParam;
+
+@Service
+public class StudentServiceImpl implements StudentService {
+	
+	public ResponseEntity<?> getStudentDetails(@PathVariable("id") String id) {
+			
+			if(roll != null) {
+				
+			} else {
+				
+			}
+		}
+	
+	/*public ResponseEntity<?> getStudentDetails(@RequestParam(value = "roll", required = false) Integer roll) {
+		
+		if(roll != null) {
+			
+		} else {
+			
+		}
+	}*/
+}
