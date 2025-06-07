@@ -1,0 +1,247 @@
+=======================
+Redis cluster setup :
+=======================
+
+Requirement: Create a cluster containing 3 shards and each having 3 replicas.
+shard1r1(p), shard1r2(s), shard1r3(s)
+shard2r1(p), shard2r2(s), shard2r3(s)
+shard3r1(p), shard3r2(s), shard3r3(s)
+
+Prerequisites:
+1. Redis 7+ installed (older versions also work, but this is latest as of now)
+2. redis-cli is available
+3. Ports 7000–7008 are free (you'll need 9 ports for 9 instances)
+4. Basic shell access (Linux/Mac/WSL2 on Windows preferred)
+
+Steps to perform :
+-------------------
+***Step1: Go inside your WSL2 Ubumtu terminal.
+
+***Step 2: Create Redis Cluster Directory Structure
+-----------------------------------------------------
+Create this folder structure:
+~/redis-cluster/
+├── 7000/
+│   └── redis.conf
+├── 7001/
+│   └── redis.conf
+├── 7002/
+│   └── redis.conf
+├── 7003/
+│   └── redis.conf
+├── 7004/
+│   └── redis.conf
+├── 7005/
+│   └── redis.conf
+├── 7006/
+│   └── redis.conf
+├── 7007/
+│   └── redis.conf
+├── 7008/
+│   └── redis.conf
+
+
+To create above folder stricture, you can write a shell script.
+
+Create a .sh file containing the following content:
+
+makeDirStructure.sh
+------------------------------------
+mkdir -p ~/redis-cluster            |
+cd ~/redis-cluster                  |
+									|
+for port in $(seq 7000 7008); do    |
+  mkdir -p $port                    |
+  cat > $port/redis.conf <<EOF      |
+port $port                          |
+cluster-enabled yes                 |
+cluster-config-file nodes.conf      |
+cluster-node-timeout 5000           |
+appendonly yes                      |
+dbfilename dump.rdb                 |
+dir ./                              |
+logfile "$port.log"                 |
+daemonize yes                       |
+EOF                                 |
+done                                |
+------------------------------------
+
+Run it using command : ./makeDirStructure.sh
+
+Note :
+-------
+cat > $port/redis.conf <<EOF ... EOF writes the configuration between the 
+EOF markers into a file.
+Each node gets its own custom redis.conf, uniquely set with its port number and 
+log filename.
+
+
+Contents of Each redis.conf (explained):
+-----------------------------------------
+
+port $port
+-> Sets the port the Redis instance will listen on (e.g., 7000, 7001...)
+
+cluster-enabled yes
+-> Turns on Redis Cluster mode.
+
+cluster-config-file nodes.conf
+-> The file where Redis stores cluster metadata (like node IDs, slot assignments, etc.).
+
+cluster-node-timeout 5000
+-> Timeout (in ms) for a node to be marked unreachable — used in failure detection and failover.
+
+appendonly yes
+-> Enables AOF (Append Only File) persistence.
+
+dbfilename dump.rdb
+-> Name of the RDB (snapshot) file for persistence.
+
+dir ./
+-> Data directory: ./ means current directory (i.e., inside the node’s folder like ~/redis-cluster/7000).
+
+logfile "$port.log"
+-> Log file name (e.g., 7000.log, 7001.log).
+
+daemonize yes
+-> Makes Redis run in the background as a daemon (not in foreground).
+
+
+***Step 3: Start All 9 Redis Servers
+--------------------------------------
+To start all 9 redis-servers at different ports you can write a shell script.
+
+start-redis-servers.sh
+----------------------------------
+for port in $(seq 7000 7008); do  |
+  redis-server $port/redis.conf   |
+done                              |
+----------------------------------
+
+Check running instances using below command:
+----------------------------------------------
+ps aux | grep redis
+
+
+***Step 4: Create the Cluster (with Replication)
+-------------------------------------------------
+Use the redis-cli --cluster create command to create cluster like following:
+
+redis-cli --cluster create \
+  127.0.0.1:7000 127.0.0.1:7001 127.0.0.1:7002 \
+  127.0.0.1:7003 127.0.0.1:7004 127.0.0.1:7005 \
+  127.0.0.1:7006 127.0.0.1:7007 127.0.0.1:7008 \
+  --cluster-replicas 2
+  
+  
+What this command does ?
+
+redis-cli --cluster create ...
+-------------------------------
+This invokes the Redis Cluster creation mode of the redis-cli tool.
+
+It tells Redis to:
+-> Form a cluster from the 9 nodes listed
+-> Distribute slots and replicas as per the flag
+
+
+127.0.0.1:7000 to 127.0.0.1:7008
+----------------------------------
+This is a list of 9 Redis instances running locally, each on its own port.
+
+You're telling Redis: "Please include all these 9 instances in the cluster."
+
+--cluster-replicas 2
+----------------------
+This means:
+
+For every master (primary) node, create 2 replicas (secondaries).
+
+With 9 total nodes and --cluster-replicas 2, Redis will automatically:
+-> Elect 3 nodes as masters
+-> Assign 2 replicas to each master
+
+
+After You Run the Command
+---------------------------
+You’ll be prompted with something like:
+
+-----------------------------------------------------------------
+>>> Performing hash slots allocation on 9 nodes...               |
+Master[0] -> Slots 0 - 5460                                      |
+Master[1] -> Slots 5461 - 10922                                  |
+Master[2] -> Slots 10923 - 16383                                 |
+Adding replica 127.0.0.1:7003 to 127.0.0.1:7000                  |
+Adding replica 127.0.0.1:7004 to 127.0.0.1:7001                  |
+Adding replica 127.0.0.1:7005 to 127.0.0.1:7002                  |
+Adding replica 127.0.0.1:7006 to 127.0.0.1:7000                  |
+Adding replica 127.0.0.1:7007 to 127.0.0.1:7001                  |
+Adding replica 127.0.0.1:7008 to 127.0.0.1:7002                  |
+>>> Can I set the above configuration? (type 'yes' to accept)    |
+																 |
+-----------------------------------------------------------------
+
+Type yes and press Enter.
+
+Redis sets up the cluster:
+-> Divides 16,384 hash slots across 3 masters
+-> Assigns 6 remaining nodes as replicas (2 per master)
+
+
+Example Final Layout of redis cluster:
+ ------------------------------------------
+| Role   | Port | Slot Range  | Replicas   |
+| ------ | ---- | ----------- | ---------- |
+| Master | 7000 | 0–5460      | 7003, 7006 |
+| Master | 7001 | 5461–10922  | 7004, 7007 |
+| Master | 7002 | 10923–16383 | 7005, 7008 |
+ ------------------------------------------
+
+How to Verify ?
+After creation run following command:
+
+redis-cli -p 7000 cluster nodes
+
+You’ll see output showing master/replica relationships and slot ranges.
+
+
+***Step 5: Test the Cluster
+-----------------------------
+
+Connect to any node:
+
+redis-cli -c -p 7000
+
+Try:
+
+set mykey "hello"
+get mykey
+
+Redis will route it to the correct master based on hash slot. 
+The -c flag enables cluster mode in redis-cli.
+
+
+***Step 6: Stopping All Servers (Optional)
+-------------------------------------------
+To stop all servers write a shell script
+
+stop-redis-servers.sh
+----------------------------------
+for port in $(seq 7000 7008); do  |
+  redis-cli -p $port shutdown     |
+done                              |
+----------------------------------
+
+
+***Step7: Additional Tips (Optional)
+--------------------------------------
+Check cluster health:
+
+redis-cli -p 7000 cluster info
+redis-cli -p 7000 cluster nodes
+
+If you ever need to re-create the cluster, delete all nodes.conf and *.rdb files 
+in each directory before restarting.
+
+
+

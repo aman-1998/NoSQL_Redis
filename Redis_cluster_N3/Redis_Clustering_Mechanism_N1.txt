@@ -1,0 +1,71 @@
+==================
+# Redis Cluster :
+==================
+
+Unlike MongoDB where shard-key is used to divide data across shards, redis supports
+automatic sharding. A redis cluster consists of more than one shards and each shard has
+odd number of replicas. 
+For example: A cluster can consist of 3 shards with each having 3 replicas.
+shard1r1(p), shard1r2(s), shard1r3(s)
+shard2r1(p), shard2r2(s), shard2r3(s)
+shard3r1(p), shard3r2(s), shard3r3(s)
+
+Redis Cluster uses fixed hash slots (0–16383) and manual/controlled slot-to-node mapping, 
+not consistent hashing.
+
+# Redis Cluster Mechanism :
+=============================
+Lets consider we have a cluster as defined above (3 shards, 3 replicas). Sometimes
+shard is also refered to as node.
+
+-> Entire data or keyspace is divided into 16384 hash slots (numbered 0 to 16383).
+
+-> Each node is responsible for a subset of these slots. 
+   For example, Node1 handles slots 0–5460, Node2 handles 5461–10922, Node3 handles 10923–16383
+   Slots are assigned to nodes, either manually or automatically. In node1 there are
+   5461 stols (numbered 0 - 5460). Each slot is like a bucket containing many key-value pairs.
+   Similarly for node2 and node3 also each slot contains distinct key-value pairs.
+   You can relate a slot with a chunk in a shard in MongoDB.
+   
+-> Keys are mapped to slots using CRC16(key) mod 16384.
+   For example: 
+   SET name "Aman Mishra"
+   Now, lets say, CRC16("name") % 16384 = 6432
+   That means this key-value pair will go to node2 in slot 6432.
+   Whenever we will do: GET name
+   Then internally, again slot will be calculated CRC16("name") % 16384 = 6432
+   And the query will be routed to slot 6432 which is inside node2. Slot 6432
+   may contain other key-value pairs as well so, redis will search for the key
+   'name' in that slot. Since each slot has small subset of entire data, hence
+   sharding makes query fast.
+   
+-> Replicas do not own slots. They just mirror the master's data for failover.
+
+
+# Redis Cluster & Gossip Protocol :
+====================================
+In Redis Cluster, the different nodes need to coordinate and stay updated about:
+-> Which nodes exist
+-> Who is master or replica
+-> Who owns which hash slots
+-> Which nodes are up or down
+
+To do this, Redis uses a lightweight gossip protocol.
+
+The gossip protocol is a communication method where:
+-> Each node periodically contacts random other nodes
+-> It shares cluster metadata it knows (node states, slot ownership, etc.)
+-> This info spreads like gossip: fast and redundantly
+
+What Happens on Node Failure?
+
+Let’s say, Node A owns slots 0–5460. When Node A goes down following steps will 
+take place.
+
+Steps:
+-> Gossip protocol detects Node A as unreachable → marked as PFAIL, then FAIL
+-> Other secondary nodes (via majority vote) promote a replica of A to be the new master
+
+The promoted replica now owns those slots. Ensuring that each of the 16,384 slots is 
+always covered by exactly one master node.
+

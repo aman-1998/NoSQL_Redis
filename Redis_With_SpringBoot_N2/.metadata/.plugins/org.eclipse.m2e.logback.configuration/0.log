@@ -758,3 +758,6 @@
 2025-06-06 23:50:47,028 [Worker-301: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - Copying 1 resource from src\main\resources to target\classes
 2025-06-06 23:50:47,038 [Worker-301: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - Copying 0 resource from src\main\resources to target\classes
 2025-06-06 23:50:47,041 [Worker-301: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - skip non existing resourceDirectory C:\Users\DELL\Desktop\Redis_Concepts\Redis_With_SpringBoot_N2\SpringBoot_MongoDB_With_Redis_N3\src\test\resources
+2025-06-07 23:23:33,610 [Worker-308: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - Copying 1 resource from src\main\resources to target\classes
+2025-06-07 23:23:33,783 [Worker-308: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - Copying 0 resource from src\main\resources to target\classes
+2025-06-07 23:23:33,790 [Worker-308: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - skip non existing resourceDirectory C:\Users\DELL\Desktop\Redis_Concepts\Redis_With_SpringBoot_N2\SpringBoot_MongoDB_With_Redis_N3\src\test\resources

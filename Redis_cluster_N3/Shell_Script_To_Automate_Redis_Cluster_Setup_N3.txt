@@ -1,0 +1,126 @@
+=============================================
+# Automate Redis Cluster setup and cleanup :
+=============================================
+
+# Redis cluster start :
+------------------------
+
+Here is a complete shell script that automates the entire Redis Cluster 
+setup with 9 nodes (3 masters + 2 replicas each) running on ports 7000 to 7008
+
+Create Script: redis-cluster-setup.sh (Check sample for reference)
+
+How to Use It ?
+
+1. Save the script to a file, e.g. :
+-------------------------------------
+nano setup-redis-cluster.sh
+
+Paste the script and save with CTRL+O, Enter, then CTRL+X
+
+2. Make it executable :
+------------------------
+chmod +x redis-cluster-setup.sh
+
+3. Run it :
+------------
+./setup-redis-cluster.sh
+
+4. After Success :
+-------------------
+Redis nodes run in background (daemonize yes)
+
+Cluster is up and running
+
+You can test:
+
+redis-cli -c -p 7000
+> set mykey hello
+> get mykey
+
+
+# Redis cluster stop :
+-----------------------
+
+Here is a shutdown and cleanup script for your Redis Cluster setup. 
+
+This script:
+-> Gracefully stops all Redis nodes (ports 7000–7008)
+-> Deletes temporary files: nodes.conf, appendonly.aof, dump.rdb, and logs
+-> Leaves the folder structure intact (you can restart later if needed)
+
+Create Script: redis-cluster-stop-cleanup.sh (Check sample for reference)
+
+
+How to Use It?
+
+1. Save the script :
+---------------------
+nano shutdown-redis-cluster.sh
+
+Paste the above, then CTRL+O, Enter, CTRL+X.
+
+2. Make it executable :
+------------------------
+chmod +x shutdown-redis-cluster.sh
+
+3. Run it :
+------------
+./shutdown-redis-cluster.sh
+
+
+4. Want Full Cleanup ?
+------------------------
+If you want to completely delete the entire cluster folder, add this line at the end:
+
+rm -rf "$BASE_DIR"
+
+
+# Redis cluster restart :
+--------------------------
+This script restarts all Redis cluster nodes using their existing configuration files. 
+It does not recreate the cluster, so your slot assignments and data remain 
+intact (as long as nodes.conf and dump.rdb / appendonly.aof are preserved).
+
+Create Script: restart-redis-cluster.sh (Check sample for reference)
+
+To check if nodes are running again:
+
+ps aux | grep redis-server
+
+Or connect to one of them:
+
+redis-cli -p 7000 cluster nodes
+
+
+# Master Cluster Manager Script :
+-----------------------------------
+Here's a powerful yet simple master controller script for your Redis Cluster setup. 
+This single script supports:
+
+start – Start all Redis nodes
+
+stop – Gracefully stop all nodes
+
+restart – Restart nodes without destroying cluster state
+
+cleanup – Remove logs, dump files, AOFs, and configs (but keeps folder structure)
+
+purge – Stop everything and delete the entire cluster directory
+
+
+Create Script: redis-cluster-manager.sh (Check sample for reference)
+
+
+Use commands like:
+
+./redis-cluster-manager.sh start      # Start nodes
+./redis-cluster-manager.sh stop       # Stop nodes
+./redis-cluster-manager.sh restart    # Restart nodes
+./redis-cluster-manager.sh cleanup    # Clean logs/dumps/AOFs
+./redis-cluster-manager.sh purge      # Wipe everything
+
+
+
+
+
